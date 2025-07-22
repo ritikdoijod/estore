@@ -9,7 +9,7 @@
   "exports": {
     "./package.json": "./package.json",
     ".": {
-      "development": "./src/index.ts",
+      "development": "./index.ts",
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "default": "./dist/index.js"
@@ -19,9 +19,17 @@
       "import": "./dist/prisma/index.js",
       "types": "./dist/prisma/index.d.ts",
       "default": "./dist/prisma/index.js"
+    },
+    "./redis": {
+      "development": "./redis/index.ts",
+      "import": "./dist/redis/index.js",
+      "types": "./dist/redis/index.d.ts",
+      "default": "./dist/redis/index.js"
     }
   },
   "dependencies": {
-    "tslib": "^2.3.0"
+    "tslib": "^2.3.0",
+    "@prisma/client": "^6.12.0",
+    "ioredis": "^5.6.1"
   }
 }
