@@ -13,6 +13,12 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "default": "./dist/index.js"
+    },
+    "./prisma": {
+      "development": "./prisma/index.ts",
+      "import": "./dist/prisma/index.js",
+      "types": "./dist/prisma/index.d.ts",
+      "default": "./dist/prisma/index.js"
     }
   },
   "dependencies": {
