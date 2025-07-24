@@ -9,19 +9,19 @@
   "exports": {
     "./package.json": "./package.json",
     ".": {
-      "development": "./index.ts",
+      "development": "./src/index.ts",
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "default": "./dist/index.js"
     },
     "./prisma": {
-      "development": "./prisma/index.ts",
+      "development": "./src/prisma/index.ts",
       "import": "./dist/prisma/index.js",
       "types": "./dist/prisma/index.d.ts",
       "default": "./dist/prisma/index.js"
     },
     "./redis": {
-      "development": "./redis/index.ts",
+      "development": "./src/redis/index.ts",
       "import": "./dist/redis/index.js",
       "types": "./dist/redis/index.d.ts",
       "default": "./dist/redis/index.js"
