@@ -9,7 +9,7 @@
         "outputs": [
           "{options.outputPath}"
         ],
-        "defaultConfiguration": "production",
+        "defaultConfiguration": "development",
         "options": {
           "platform": "node",
           "outputPath": "apps/auth-service/dist",
@@ -20,7 +20,12 @@
           "main": "apps/auth-service/src/main.ts",
           "tsConfig": "apps/auth-service/tsconfig.app.json",
           "assets": [
-            "apps/auth-service/src/assets"
+            "apps/auth-service/src/assets",
+            {
+              "glob": "swagger-output.json",
+              "input": "apps/auth-service/src",
+              "output": "apps/auth-service/src"
+            }
           ],
           "esbuildOptions": {
             "sourcemap": true,
