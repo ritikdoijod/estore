@@ -7,7 +7,8 @@ const doc = {
       'Automatically generated Swagger documentation for the Auth Service API.',
     version: '1.0.0',
   },
-  host: 'localhost:6001',
+  basePath: '/auth',
+  host: 'localhost:8080',
   schemes: ['http'],
 };
 

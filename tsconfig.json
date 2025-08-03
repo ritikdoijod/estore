@@ -13,10 +13,25 @@
       "path": "./apps/api-gateway"
     },
     {
-      "path": "./packages/middlewares"
+      "path": "./apps/user-ui"
     },
     {
-      "path": "./packages/libs"
+      "path": "./libs/components"
+    },
+    {
+      "path": "./libs/utils"
+    },
+    {
+      "path": "./libs/assets"
+    },
+    {
+      "path": "./libs/middlewares"
+    },
+    {
+      "path": "./libs/schemas"
+    },
+    {
+      "path": "./libs/db-utils"
     }
   ]
 }

@@ -21,10 +21,13 @@
   ],
   "references": [
     {
-      "path": "../../packages/middlewares/tsconfig.lib.json"
+      "path": "../../libs/schemas/tsconfig.lib.json"
     },
     {
-      "path": "../../packages/libs/tsconfig.lib.json"
+      "path": "../../libs/middlewares/tsconfig.lib.json"
+    },
+    {
+      "path": "../../libs/db-utils/tsconfig.lib.json"
     }
   ]
 }

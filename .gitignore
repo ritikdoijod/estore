@@ -49,3 +49,9 @@ test-output
 
 # environment
 .env
+
+# Next.js
+.next
+out
+vite.config.*.timestamp*
+vitest.config.*.timestamp*
