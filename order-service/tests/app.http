@@ -1,0 +1,37 @@
+@baseUrl = http://localhost:4002
+
+### GET request to fetch all customers
+# @name get_customers
+GET {{baseUrl}}/customers
+
+### POST request to create customer
+# @name create_customer
+POST {{baseUrl}}/customers
+Content-Type: application/json
+
+{
+  "firstName": "Test",
+  "lastName": "User5",
+  "email": "test_user5@example.com"
+}
+
+### GET request to fetch customer
+# @name get_customer
+GET {{baseUrl}}/customers/{{create_customer.response.body.$.id}}
+
+### POST request to create order
+# @name create_order
+POST {{baseUrl}}/orders
+Content-Type: application/json
+
+{
+  "customer": "{{create_customer.response.body.$.id}}"
+}
+
+### GET request to fetch order
+GET {{baseUrl}}/orders/{{create_order.response.body.$.id}}
+
+### GET request to fetch all orders
+# @name get_orders
+GET {{baseUrl}}/orders
+

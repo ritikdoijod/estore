@@ -1,0 +1,62 @@
+services:
+  estore-db:
+    image: postgres:18
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: StrongPass
+      POSTGRES_DB: postgres
+
+  redis:
+    image: redis:8.2
+    ports:
+      - "6379:6379"
+
+
+  auth-service:
+    build:
+      context: auth-service/
+      dockerfile: Dockerfile
+    ports:
+      - "4001:4001"
+    env_file:
+      - ./auth-service/.env
+    environment:
+      DATABASE_URL: postgresql://admin:StrongPass@estore-db:5432/auth_service_db
+      REDIS_URL: redis://redis:6379
+    depends_on:
+      - estore-db
+      - redis
+
+  auth-worker:
+    build:
+      context: auth-service/
+      dockerfile: Dockerfile
+    command: ["node", "workers.js"]
+    env_file:
+      - ./auth-service/.env
+    environment:
+      REDIS_URL: redis://redis:6379
+    depends_on:
+      - redis
+
+  order-service:
+    build:
+      context: order-service/
+      dockerfile: Dockerfile
+    ports:
+      - "4002:4002"
+    env_file:
+      - ./order-service/.env
+    environment:
+      DATABASE_URL: postgresql://admin:StrongPass@estore-db:5432/order_service_db
+    depends_on:
+      - estore-db
+
+volumes:
+  pg_data:
+  kafka_data:

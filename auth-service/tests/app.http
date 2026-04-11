@@ -1,0 +1,43 @@
+@baseUrl = http://localhost:4001
+
+### Check Health
+GET {{baseUrl}}
+
+### Register
+# @name register
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+    "firstName": "Test",
+    "lastName": "User2",
+    "email": "test_user2@example.com",
+    "password": "StrongPass"
+}
+
+### Verify OTP
+POST {{baseUrl}}/auth/verify
+Content-Type: application/json
+
+{
+    "sessionId": "374eb4d8-d3b2-49ac-a78d-f545e1240737",
+    "otp": "342787"
+}
+
+### Resend OTP
+POST {{baseUrl}}/auth/resend-otp
+Content-Type: application/json
+
+{
+    "sessionId": "374eb4d8-d3b2-49ac-a78d-f545e1240737"
+}
+
+### Login
+# @name login
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+    "email": "test_user2@example.com",
+    "password": "StrongPass"
+}
