@@ -9,34 +9,48 @@ import {
   getRegisterSession,
   verifyOTP,
   enforceResendOTPRateLimit,
-  signToken,
+  signAccessToken,
 } from "./utils";
 import { addSendRegisterOTPJob } from "./queue";
+import { sValidator } from "@hono/standard-validator";
+import z from "zod";
 
 const router = new Hono();
 
-router.post("/register", async (c) => {
-  const payload = await c.req.json();
+router.post(
+  "/sign-up",
+  sValidator(
+    "json",
+    z.object({
+      firstName: z.string().min(3).max(255),
+      lastName: z.string().min(1).max(255),
+      email: z.email(),
+      password: z.string().min(8).max(255),
+    }),
+  ),
+  async (c) => {
+    const payload = c.req.valid("json");
 
-  const existingUser = await findUserByEmail(payload.email);
+    const existingUser = await findUserByEmail(payload.email);
 
-  if (existingUser)
-    throw new HTTPException(400, {
-      message: `User already exist with email: ${payload.email}`,
+    if (existingUser)
+      throw new HTTPException(400, {
+        message: `User already exist with email: ${payload.email}`,
+      });
+
+    await enforceRegistrationRateLimit(payload.email);
+
+    const hashedPassword = await argon2.hash(payload.password);
+    const sessionId = await createRegisterSession({
+      ...payload,
+      password: hashedPassword,
     });
 
-  await enforceRegistrationRateLimit(payload.email);
+    await addSendRegisterOTPJob(sessionId);
 
-  const hashedPassword = await argon2.hash(payload.password);
-  const sessionId = await createRegisterSession({
-    ...payload,
-    password: hashedPassword,
-  });
-
-  await addSendRegisterOTPJob(sessionId);
-
-  return c.json({ sessionId });
-});
+    return c.json({ sessionId });
+  },
+);
 
 router.post("/verify", async (c) => {
   const payload = await c.req.json();
@@ -48,9 +62,11 @@ router.post("/verify", async (c) => {
 
   await verifyOTP(payload.sessionId, payload.otp);
 
-  await createUser(session);
+  const user = await createUser(session);
 
-  return c.json({ message: "User registered successfully" });
+  const accessToken = await signAccessToken(user.id);
+
+  return c.json({ accessToken });
 });
 
 router.post("/resend-otp", async (c) => {
@@ -65,13 +81,13 @@ router.post("/resend-otp", async (c) => {
   return c.json({ message: "OTP will be sent via mail" });
 });
 
-router.post("/login", async (c) => {
+router.post("/sign-in", async (c) => {
   const payload = await c.req.json();
   const user = await findUserByEmail(payload.email);
 
   if (!user) throw new HTTPException(401, { message: "Invalid credentials" });
 
-  const accessToken = signToken({ userId: user.id });
+  const accessToken = await signAccessToken(user.id);
 
   return c.json({ accessToken });
 });

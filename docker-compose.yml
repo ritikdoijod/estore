@@ -17,45 +17,63 @@ services:
       - "6379:6379"
 
 
-  auth-service:
-    build:
-      context: auth-service/
-      dockerfile: Dockerfile
-    ports:
-      - "4001:4001"
-    env_file:
-      - ./auth-service/.env
-    environment:
-      DATABASE_URL: postgresql://admin:StrongPass@estore-db:5432/auth_service_db
-      REDIS_URL: redis://redis:6379
-    depends_on:
-      - estore-db
-      - redis
+  # auth-service:
+  #   build:
+  #     context: auth-service/
+  #     dockerfile: Dockerfile
+  #   # ports:
+  #   #   - "4001:4001"
+  #   env_file:
+  #     - ./auth-service/.env
+  #   environment:
+  #     DATABASE_URL: postgresql://admin:StrongPass@estore-db:5432/auth_service_db
+  #     REDIS_URL: redis://redis:6379
+  #   depends_on:
+  #     - estore-db
+  #     - redis
 
-  auth-worker:
-    build:
-      context: auth-service/
-      dockerfile: Dockerfile
-    command: ["node", "workers.js"]
-    env_file:
-      - ./auth-service/.env
-    environment:
-      REDIS_URL: redis://redis:6379
-    depends_on:
-      - redis
+  # auth-worker:
+  #   build:
+  #     context: auth-service/
+  #     dockerfile: Dockerfile
+  #   command: ["node", "workers.js"]
+  #   env_file:
+  #     - ./auth-service/.env
+  #   environment:
+  #     REDIS_URL: redis://redis:6379
+  #   depends_on:
+  #     - redis
 
-  order-service:
-    build:
-      context: order-service/
-      dockerfile: Dockerfile
-    ports:
-      - "4002:4002"
-    env_file:
-      - ./order-service/.env
-    environment:
-      DATABASE_URL: postgresql://admin:StrongPass@estore-db:5432/order_service_db
-    depends_on:
-      - estore-db
+  # order-service:
+  #   build:
+  #     context: order-service/
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "4002:4002"
+  #   env_file:
+  #     - ./order-service/.env
+  #   environment:
+  #     DATABASE_URL: postgresql://admin:StrongPass@estore-db:5432/order_service_db
+  #   depends_on:
+  #     - estore-db
+
+  # webapp:
+  #   build:
+  #     context: webapp/
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "3000:80"
+  #   environment:
+  #     VITE_BACKEND_API_URL: http://auth-service:4001
+
+  # api-gateway:
+  #   image: nginx:latest
+  #   ports:
+  #     - "4000:80"
+  #   volumes:
+  #     - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+  #   depends_on:
+  #     - auth-service
 
 volumes:
   pg_data:

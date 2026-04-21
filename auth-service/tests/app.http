@@ -3,15 +3,15 @@
 ### Check Health
 GET {{baseUrl}}
 
-### Register
-# @name register
-POST {{baseUrl}}/auth/register
+### Sign Up
+# @name sign-up
+POST {{baseUrl}}/sign-up
 Content-Type: application/json
 
 {
     "firstName": "Test",
-    "lastName": "User2",
-    "email": "test_user2@example.com",
+    "lastName": "User3",
+    "email": "test_user5@example.com",
     "password": "StrongPass"
 }
 
@@ -20,8 +20,8 @@ POST {{baseUrl}}/auth/verify
 Content-Type: application/json
 
 {
-    "sessionId": "374eb4d8-d3b2-49ac-a78d-f545e1240737",
-    "otp": "342787"
+    "sessionId": "b0e279e0-a014-4cac-afda-979fe07854ea",
+    "otp": "574006"
 }
 
 ### Resend OTP

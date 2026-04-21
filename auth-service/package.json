@@ -4,17 +4,19 @@
   "scripts": {
     "dev": "tsx watch src/server.ts | pino-pretty",
     "build": "node esbuild.config.js",
-    "start": "node dist/server.js"
+    "start": "node dist/server.js",
+    "dev:worker": "tsx watch src/workers.ts | pino-pretty"
   },
   "dependencies": {
     "@hono/node-server": "^1.19.12",
+    "@hono/standard-validator": "^0.2.2",
     "argon2": "^0.44.0",
     "bullmq": "^5.73.0",
     "dotenv": "^17.4.0",
     "drizzle-orm": "^0.45.2",
     "hono": "^4.12.10",
     "ioredis": "^5.10.1",
-    "jsonwebtoken": "^9.0.3",
+    "jose": "^6.2.2",
     "kafkajs": "^2.2.4",
     "pg": "^8.20.0",
     "pino": "^10.3.1",

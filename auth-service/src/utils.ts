@@ -1,8 +1,8 @@
 import { redis } from "./redis";
 import { HTTPException } from "hono/http-exception";
 import argon2 from "argon2";
-import jwt from "jsonwebtoken";
 import { config } from "./config";
+import * as jose from "jose";
 
 export async function setCooldown(email: string) {
   return redis.set(`auth:register:cooldown:${email}`, "1", "EX", 300);
@@ -12,7 +12,7 @@ export async function createRegisterSession(data: any) {
   const id = crypto.randomUUID();
   await redis.set(
     `auth:register:session:${id}`,
-    JSON.stringify(data),
+    JSON.stringify({id, ...data}),
     "EX",
     3600,
   );
@@ -21,7 +21,7 @@ export async function createRegisterSession(data: any) {
 
 export async function getRegisterSession(id: string) {
   const result = await redis.get(`auth:register:session:${id}`);
-  return result ? JSON.parse(result) : null;
+  return result ? { ...JSON.parse(result) } : null;
 }
 
 export async function closeRegisterSession(id: string) {
@@ -47,6 +47,7 @@ export async function enforceRegistrationRateLimit(email: string) {
       message: "Please wait 5 minutes before sending new request.",
     });
 
+  await redis.set(`auth:register:cooldown:${email}`, "1", "EX", 5 * 60);
   const attempts = parseInt(
     (await redis.get(`auth:register:attempts:${email}`)) || "0",
   );
@@ -91,10 +92,16 @@ export async function enforceResendOTPRateLimit(sessionId: string) {
     });
 }
 
-export function signToken(payload: any) {
-  return jwt.sign(payload, config.JWT_SECRET, { expiresIn: "5m" });
+export async function signAccessToken(subject: string) {
+  const secret = new TextEncoder().encode(config.JWT_SECRET);
+  return new jose.SignJWT()
+    .setSubject(subject)
+    .setIssuedAt()
+    .setExpirationTime("5m")
+    .sign(secret);
 }
 
-export function verifyToken(token: string) {
-  return jwt.verify(token, config.JWT_SECRET);
+export function verifyTAccessoken(token: string) {
+  const secret = new TextEncoder().encode(config.JWT_SECRET);
+  return jose.jwtVerify(token, secret);
 }

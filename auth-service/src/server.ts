@@ -1,14 +1,14 @@
+import { serve } from "@hono/node-server";
+import { Hono } from "hono";
+import { HTTPException } from "hono/http-exception";
 import { config } from "./config";
 import { logger } from "./logger";
 import { redis } from "./redis";
 import router from "./router";
-import { serve } from "@hono/node-server";
-import { Hono } from "hono";
-import { HTTPException } from "hono/http-exception";
 
 const app = new Hono();
 
-app.onError((err, c) => {
+app.onError((err, c) => {  
   if (err instanceof HTTPException) {
     return c.json(
       {
@@ -28,11 +28,7 @@ app.onError((err, c) => {
   );
 });
 
-app.get("/", (c) => {
-  return c.text("Hello Hono!");
-});
-
-app.route("/auth", router);
+app.route("/", router);
 
 const server = serve(
   {
