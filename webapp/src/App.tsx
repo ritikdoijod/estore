@@ -10,8 +10,10 @@ import {
 } from "@tanstack/react-router"
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools"
 import axios from "axios"
+import VerifyOtpPage from "./pages/verify-otp"
 
 axios.defaults.baseURL = import.meta.env.VITE_BACKEND_API_URL
+axios.defaults.withCredentials = true
 
 const queryClient = new QueryClient()
 
@@ -48,7 +50,18 @@ const signUpPage = createRoute({
   component: SignUpPage,
 })
 
-const routeTree = rootRoute.addChildren([indexRoute, loginRoute, signUpPage])
+const verifyOtpRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/verify-otp",
+  component: VerifyOtpPage,
+})
+
+const routeTree = rootRoute.addChildren([
+  indexRoute,
+  loginRoute,
+  signUpPage,
+  verifyOtpRoute,
+])
 
 const router = createRouter({ routeTree })
 

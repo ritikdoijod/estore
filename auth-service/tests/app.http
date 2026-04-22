@@ -1,4 +1,4 @@
-@baseUrl = http://localhost:4001
+@baseUrl = http://localhost:4000/auth
 
 ### Check Health
 GET {{baseUrl}}
@@ -34,10 +34,10 @@ Content-Type: application/json
 
 ### Login
 # @name login
-POST {{baseUrl}}/auth/login
+POST {{baseUrl}}/sign-in
 Content-Type: application/json
 
 {
-    "email": "test_user2@example.com",
+    "email": "test_user3@example.com",
     "password": "StrongPass"
 }

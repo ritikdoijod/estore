@@ -13,27 +13,22 @@ import {
   FieldGroup,
   FieldLabel,
 } from "@/components/ui/field"
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupInput,
-} from "@/components/ui/input-group"
+import { Input } from "@/components/ui/input"
 import { cn } from "@/lib/utils"
 import { useForm } from "@tanstack/react-form"
 import { useMutation } from "@tanstack/react-query"
 import { Link, useNavigate } from "@tanstack/react-router"
 import axios, { AxiosError } from "axios"
-import { KeyRound, Mail } from "lucide-react"
 
 export function SignUpForm() {
   const navigate = useNavigate()
   const singUpMutation = useMutation({
     mutationFn: async (data: any) => {
-      const result = await axios.post("/auth/signup", data)
+      const result = await axios.post("/auth/sign-up", data)
       return result.data
     },
-    onSuccess: (data) => {
-      navigate({ to: "/" })
+    onSuccess: () => {
+      navigate({ to: "/verify-otp" })
     },
     onError: (err: AxiosError) => {
       console.log(
@@ -56,8 +51,8 @@ export function SignUpForm() {
     <div>
       <Card>
         <CardHeader className="text-center">
-          <CardTitle>Welcome back</CardTitle>
-          <CardDescription>Login in to your CarePlus Account</CardDescription>
+          <CardTitle>Welcome</CardTitle>
+          <CardDescription>Sign up to your Estore Account</CardDescription>
         </CardHeader>
         <CardContent>
           <form
@@ -75,46 +70,34 @@ export function SignUpForm() {
                     return (
                       <Field>
                         <FieldLabel htmlFor={field.name}>First Name</FieldLabel>
-                        <InputGroup className="h-12">
-                          <InputGroupInput
-                            name={field.name}
-                            id={field.name}
-                            type="text"
-                            value={field.state.value}
-                            onChange={(e) => field.handleChange(e.target.value)}
-                            onBlur={field.handleBlur}
-                            placeholder="Joe"
-                            className="h-12"
-                          />
-                          <InputGroupAddon className="p-3">
-                            <Mail />
-                          </InputGroupAddon>
-                        </InputGroup>
+                        <Input
+                          name={field.name}
+                          id={field.name}
+                          type="text"
+                          value={field.state.value}
+                          onChange={(e) => field.handleChange(e.target.value)}
+                          onBlur={field.handleBlur}
+                          placeholder="Joe"
+                        />
                       </Field>
                     )
                   }}
-                />{" "}
+                />
                 <form.Field
                   name="lastName"
                   children={(field) => {
                     return (
                       <Field>
                         <FieldLabel htmlFor={field.name}>Last Name</FieldLabel>
-                        <InputGroup className="h-12">
-                          <InputGroupInput
-                            name={field.name}
-                            id={field.name}
-                            type="text"
-                            value={field.state.value}
-                            onChange={(e) => field.handleChange(e.target.value)}
-                            onBlur={field.handleBlur}
-                            placeholder="Brevis"
-                            className="h-12"
-                          />
-                          <InputGroupAddon className="p-3">
-                            <Mail />
-                          </InputGroupAddon>
-                        </InputGroup>
+                        <Input
+                          name={field.name}
+                          id={field.name}
+                          type="text"
+                          value={field.state.value}
+                          onChange={(e) => field.handleChange(e.target.value)}
+                          onBlur={field.handleBlur}
+                          placeholder="Brevis"
+                        />
                       </Field>
                     )
                   }}
@@ -126,21 +109,15 @@ export function SignUpForm() {
                   return (
                     <Field>
                       <FieldLabel htmlFor={field.name}>Email</FieldLabel>
-                      <InputGroup className="h-12">
-                        <InputGroupInput
-                          name={field.name}
-                          id={field.name}
-                          type="email"
-                          value={field.state.value}
-                          onChange={(e) => field.handleChange(e.target.value)}
-                          onBlur={field.handleBlur}
-                          placeholder="abc@example.com"
-                          className="h-12"
-                        />
-                        <InputGroupAddon className="p-3">
-                          <Mail />
-                        </InputGroupAddon>
-                      </InputGroup>
+                      <Input
+                        name={field.name}
+                        id={field.name}
+                        type="email"
+                        value={field.state.value}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                        onBlur={field.handleBlur}
+                        placeholder="abc@example.com"
+                      />
                     </Field>
                   )
                 }}
@@ -152,20 +129,15 @@ export function SignUpForm() {
                     <Field>
                       <FieldLabel htmlFor={field.name}>Password</FieldLabel>
 
-                      <InputGroup className="h-12">
-                        <InputGroupInput
-                          name={field.name}
-                          id={field.name}
-                          type="password"
-                          value={field.state.value}
-                          onChange={(e) => field.handleChange(e.target.value)}
-                          onBlur={field.handleBlur}
-                          placeholder="••••••••"
-                        />
-                        <InputGroupAddon className="p-3">
-                          <KeyRound />
-                        </InputGroupAddon>
-                      </InputGroup>
+                      <Input
+                        name={field.name}
+                        id={field.name}
+                        type="password"
+                        value={field.state.value}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                        onBlur={field.handleBlur}
+                        placeholder="••••••••"
+                      />
                     </Field>
                   )
                 }}
@@ -175,19 +147,19 @@ export function SignUpForm() {
         </CardContent>
         <CardFooter>
           <Field>
-            <Button type="submit" form="signup-form" className="h-12">
-              Login
+            <Button type="submit" form="signup-form">
+              Sign up
             </Button>
             <FieldDescription className="text-center">
-              Don&apos;t have an account?{" "}
+              Already have an account?{" "}
               <Link
-                to="/"
+                to="/login"
                 className={cn(
                   buttonVariants({ variant: "link" }),
                   "p-0 text-black"
                 )}
               >
-                Sign up
+                Login
               </Link>
             </FieldDescription>
           </Field>

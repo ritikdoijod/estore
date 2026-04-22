@@ -17,20 +17,18 @@ services:
       - "6379:6379"
 
 
-  # auth-service:
-  #   build:
-  #     context: auth-service/
-  #     dockerfile: Dockerfile
-  #   # ports:
-  #   #   - "4001:4001"
-  #   env_file:
-  #     - ./auth-service/.env
-  #   environment:
-  #     DATABASE_URL: postgresql://admin:StrongPass@estore-db:5432/auth_service_db
-  #     REDIS_URL: redis://redis:6379
-  #   depends_on:
-  #     - estore-db
-  #     - redis
+  auth-service:
+    build:
+      context: auth-service/
+      dockerfile: Dockerfile
+    env_file:
+      - ./auth-service/.env
+    environment:
+      DATABASE_URL: postgresql://admin:StrongPass@estore-db:5432/auth_service_db
+      REDIS_URL: redis://redis:6379
+    depends_on:
+      - estore-db
+      - redis
 
   # auth-worker:
   #   build:
@@ -66,14 +64,14 @@ services:
   #   environment:
   #     VITE_BACKEND_API_URL: http://auth-service:4001
 
-  # api-gateway:
-  #   image: nginx:latest
-  #   ports:
-  #     - "4000:80"
-  #   volumes:
-  #     - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-  #   depends_on:
-  #     - auth-service
+  api-gateway:
+    image: nginx:latest
+    ports:
+      - "4000:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - auth-service
 
 volumes:
   pg_data:
