@@ -10,18 +10,18 @@ Content-Type: application/json
 
 {
     "firstName": "Test",
-    "lastName": "User3",
+    "lastName": "User5",
     "email": "test_user5@example.com",
     "password": "StrongPass"
 }
 
 ### Verify OTP
-POST {{baseUrl}}/auth/verify
+POST {{baseUrl}}/verify
 Content-Type: application/json
 
 {
-    "sessionId": "b0e279e0-a014-4cac-afda-979fe07854ea",
-    "otp": "574006"
+    "sessionId": "c463b2d2-5899-4707-819c-e0c52b7de603",
+    "otp": "382395"
 }
 
 ### Resend OTP

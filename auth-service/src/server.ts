@@ -5,8 +5,11 @@ import { config } from "./config";
 import { logger } from "./logger";
 import { redis } from "./redis";
 import router from "./router";
+import { csrf } from "hono/csrf";
 
 const app = new Hono();
+
+app.use(csrf())
 
 app.onError((err, c) => {  
   if (err instanceof HTTPException) {

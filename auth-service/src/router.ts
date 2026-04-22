@@ -1,7 +1,7 @@
 import argon2 from "argon2";
 import { Hono } from "hono";
 import { HTTPException } from "hono/http-exception";
-import { createUser, findUserByEmail, findUserById } from "./db";
+import { createUser, findUserByEmail } from "./db";
 import {
   enforceRegistrationRateLimit,
   createRegisterSession,
@@ -10,10 +10,12 @@ import {
   verifyOTP,
   enforceResendOTPRateLimit,
   signAccessToken,
+  signRefreshToken,
 } from "./utils";
 import { addSendRegisterOTPJob } from "./queue";
 import { sValidator } from "@hono/standard-validator";
 import z from "zod";
+import { setCookie } from "hono/cookie";
 
 const router = new Hono();
 
@@ -65,8 +67,25 @@ router.post("/verify", async (c) => {
   const user = await createUser(session);
 
   const accessToken = await signAccessToken(user.id);
+  const refreshToken = await signRefreshToken(user.id);
 
-  return c.json({ accessToken });
+  setCookie(c, "access_token", accessToken, {
+    httpOnly: true,
+    secure: true,
+    sameSite: "strict",
+    path: "/",
+    maxAge: 60 * 5,
+  });
+
+  setCookie(c, "refresh_token", refreshToken, {
+    httpOnly: true,
+    secure: true,
+    sameSite: "strict",
+    path: "/",
+    maxAge: 60 * 24 * 7,
+  });
+
+  return c.newResponse(null, 200);
 });
 
 router.post("/resend-otp", async (c) => {
@@ -87,9 +106,29 @@ router.post("/sign-in", async (c) => {
 
   if (!user) throw new HTTPException(401, { message: "Invalid credentials" });
 
-  const accessToken = await signAccessToken(user.id);
+  if (!(await argon2.verify(user.password as string, payload.password)))
+    throw new HTTPException(401, { message: "Invalid credentials" });
 
-  return c.json({ accessToken });
+  const accessToken = await signAccessToken(user.id);
+  const refreshToken = await signRefreshToken(user.id);
+
+  setCookie(c, "access_token", accessToken, {
+    httpOnly: true,
+    secure: true,
+    sameSite: "strict",
+    path: "/",
+    maxAge: 60 * 5,
+  });
+
+  setCookie(c, "refresh_token", refreshToken, {
+    httpOnly: true,
+    secure: true,
+    sameSite: "strict",
+    path: "/",
+    maxAge: 60 * 24 * 7,
+  });
+
+  return c.newResponse(null, 200);
 });
 
 export default router;
